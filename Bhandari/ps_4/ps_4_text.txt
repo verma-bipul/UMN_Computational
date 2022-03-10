@@ -1,0 +1,31 @@
+Aiyagari economy with aggregate shocks
+
+Modify the shocks as follows
+
+Let z_g = 1.01, z_b  = 0.99 be the aggregate states. An agent can be either employed e_t = 1 or unemployed e_t = 0 in each period. The employment
+status e_t follows a first-order Markov process with the transition matrix pi (z,e|z_,e_). 
+
+Use the following information to obtain the transition matrix pi (z,e|z_,e_)
+
+ 
+
+(i)   average duration of both an expansion and a recession is 8 quarters.
+
+(ii)  average duration of unemployment during expansions is 1.5 quarters,
+
+(iii) average duration of unemployment in recessions is 2.5 quarters,
+
+(iv) unemployment rate in expansions is 4%,
+(v) unemployment rate in recessions is 10%,
+
+(vi) pi (e=0,z=z_b |e_=0,z_=z_g) = 1.25  pi (e=0,z=z_b |e_=0,z_=z_b)   
+
+(vii)pi (e=0,z=z_g |e_=0,z_=z_b) = 0.75  pi (e=0,z=z_g |e_=0,z_=z_g)   
+
+Compute the equilibria and report the usual business cycle statistics, that is, std and correlations between output, consumption, investment. You need to do both the parts below  
+
+1. Solve using the method as described in Krusel Smith
+
+2. Solve using Reiter's method
+
+Please submit separate codes for the two parts. 

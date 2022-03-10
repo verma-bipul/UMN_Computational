@@ -1,0 +1,267 @@
+% 8185: Quant Bhandari PS3
+
+\documentclass[12pt]{article}
+%\usepackage[T1]{fontenc}
+%\usepackage{lipsum}
+\renewcommand{\baselinestretch}{1.2} 
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    urlcolor=blue,
+    citecolor=blue
+}
+\usepackage[export]{adjustbox}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{geometry}
+\setcounter{MaxMatrixCols}{20}
+\geometry{a4paper,
+ left=3cm,right=3cm,
+ top=1.5cm, bottom=1.5cm}
+
+\usepackage{natbib}
+\bibliographystyle{apalike}
+
+
+%\usepackage{natbib}
+%\setcitestyle{authoryear,open={(},close={)}}
+\graphicspath{ {../figs/} }
+
+\begin{document}
+%\thispagestyle{myheadings}
+%\markright{Indian Statistical Institute, New Delhi\hfill }
+
+\title{Econ 8185 (002): Quant PS4}
+\author{Bipul Verma}
+\date{\today}
+\maketitle
+
+%\tableofcontents{}
+\abstract{This document solves the Aiyagri model with Aggregate Shocks.}
+
+\vspace{8cm}
+
+%\begin{center}
+%\includegraphics[scale=0.4]{isi_logo.png}
+%\end{center}
+%\begin{center}
+%\begin{Large}
+%INDIAN STATISTICAL INSTITUTE, NEW-DELHI.
+%\end{Large}
+%\end{center}
+
+
+\newpage
+
+\section{Aiyagari with Aggregate shocks}
+The basic Aiyagari model has only idiosyncratic labour income or productivity shocks. The Krussel-Smith model adds aggregate shocks to the Aiyagari model. \\
+For the current case, let $z$ denote the aggregate shocks, while $\epsilon$ denotes individual shocks. Both shocks can take two values only: \begin{align*}
+z & \in \{z_b = 0.99, z_g = 1.01 \} \\
+\epsilon & \in \{ 0, 1\}. 
+\end{align*}
+
+\subsection*{Construction of transition matrix}
+We'll keep the notation same as in KS. Here $\pi_{zz'}$ denotes the probability of transition from state $z$ today to $z'$ tomorrow. Similarly, $\pi_{zz'\epsilon\epsilon'}$ denotes the probability of transitioning from state $(z, \epsilon)$ today to state $(z', \epsilon')$ tomorrow. The aggregate shock follows $Z$ follows a first order markov structure with the following transition matrix:
+\begin{align*}
+\Pi_z = \begin{bmatrix}
+\pi_{gg} & \pi_{gb} \\
+\pi_{bg} & \pi_{bb}
+\end{bmatrix}
+\end{align*}
+The transition matrix for aggregate shock is calibrated such that the average duration of expansion($z_g$) or recession($z_b$) is 8 quarters. Given the markov process for aggregate shock, the average duration of being in good state is given by $\frac{1}{1-\pi_{gg}}$, and average duration of being in bad state is given by $\frac{1}{1-\pi_{bb}}$. This gives that $\pi_{gg} = \pi_{bb} = 1-\frac{1}{8}.$\footnote{The average duration of being in good state is calulated using the following infinite sum :  $\lim_{N \to \infty} 1(1-\pi_{gg}) + 2\pi_{gg}(1-\pi_{gg}) +\dots N \pi_{gg}^{N-1}(1-\pi_{gg})$. A similar calculation for the average duration of being in bad state holds. }\\
+Controlling for $z$, shocks $(z', \epsilon')$ are uncorrelated, however, the joint realization of $(z', \epsilon')$ next period depends on the realization of current $z$. Combining the aggregate shocks and individual shocks there are 4 possible state at each time period. The transition matrix $\Pi'$ shows the probability of future state given the current state.   The transition matrix $\Pi'$ is given as: 
+\begin{align*}
+\Pi' = \begin{bmatrix}
+\pi_{gg00} & \pi_{bg00} & \pi_{gg10} & \pi_{bg10} \\
+\pi_{gb00} & \pi_{bb00} & \pi_{gb10} & \pi_{bb10} \\
+\pi_{gg01} & \pi_{bg01} & \pi_{gg11} & \pi_{bg11} \\
+\pi_{gb01} & \pi_{bb01} & \pi_{gb11} & \pi_{bb11}
+\end{bmatrix}
+\end{align*}
+\textit{Note that this is actually the adjoint of transition matrix. Writing the matrix in form turns out to be more useful in simulation.} In order to construct the transition matrix $\Pi$,  we make use of the following property of conditional probability:\footnote{Imrohoroglu(1989) takes a different approach to calibrate the transition matrix ($\Pi$). She constructs $\Pi$ based on $\Pi_{\epsilon\epsilon'\_g}$, and $\Pi_{\epsilon\epsilon'\_b}$.}
+\begin{align*}
+P(A, B|C) & = P(A|B, C) P(B|C)\\
+P( \epsilon', z' | z, \epsilon) & = P(\epsilon'|z', \epsilon, z) P(z'| z, \epsilon) \\
+P(\epsilon', z' | z, \epsilon) & = P(\epsilon'|z', \epsilon, z) P(z'| z)\\
+\pi_{zz'\epsilon\epsilon'} & = \pi_{zz'}\pi_{\epsilon'|\epsilon z z'}.
+\end{align*}
+Since $\epsilon$ can take only two values, say $\epsilon_1, \epsilon_2$, from the above formulation we see see that:
+\begin{align*}
+\pi_{zz'\epsilon\epsilon'_2} & = \pi_{zz'}\pi_{\epsilon'_2|\epsilon z z'} = \pi_{zz'}(1-\pi_{\epsilon'_1|\epsilon z z'}).
+\end{align*}
+KS mentions the above condition in the following form:
+\begin{align*}
+\pi_{zz'} = \pi_{zz'00} + \pi_{zz'01} = \pi_{zz'10} + \pi_{zz'11}.
+\end{align*}
+We calibrate the transition matrix to match the following piece of information.
+\begin{enumerate}
+\item Average duration of unemployment($\epsilon=0$) during expansion($z_g$) is 1.5 quarters, and during recession($z_b$) is 2.5 quarters.
+\begin{itemize}
+\item Given that the average duration of unemployment,  we can write:\footnote{Some authors directly set $\pi_{gg00} = 1 -\frac{1}{1.5}, \pi_{bb00} = 1 -\frac{1}{2.5}$. I think the current method to calibrate is more appropriate.}
+\begin{align*}
+\pi_{0|0 b b} & = 1 -\frac{1}{2.5} \\
+\pi_{0|0 g g} & = 1 -\frac{1}{1.5}.
+\end{align*}
+Thus we obtain:
+\begin{align*}
+\pi_{gg00} & = \pi_{gg}\pi_{0|0g g} \\
+\pi_{gg01} & = \pi_{gg}(1-\pi_{0|0g g})\\
+\pi_{bb00} & = \pi_{bb}\pi_{0|0b b} \\
+\pi_{bb01} & = \pi_{bb}(1-\pi_{0|0b b}).
+\end{align*}
+\end{itemize}
+
+\item KS adds the following additional restrictions to ensures that the probability of remaining unemployed is high going into a bad state as compared to the bad state, and probability of remaining unemployed is low going into a good state compared to the good state:
+\begin{align*}
+\pi_{gb00}& = 1.25 \pi_{bb00}\frac{\pi_{gb}}{\pi_{bb}} \\
+\pi_{bg00}& = 0.75 \pi_{gg00}\frac{\pi_{bg}}{\pi_{gg}}.
+\end{align*}
+The above restrictions can also be stated in terms of conditional probabilities as:
+\begin{align*}
+\pi_{0|0gb} & = 1.25 \pi_{0|0bb} \\
+\pi_{0|0bg} & = 0.75 \pi_{0|0 gg}.
+\end{align*}
+From this we can arrive at:
+\begin{align*}
+\pi_{gb01} & = \pi_{gb}(1-\pi_{0|0gb})\\
+\pi_{bg01} & = \pi_{bg}(1-\pi_{0|0bg}).
+\end{align*}
+
+\item Unemployment rate in expansion($u_g$) is $4 \%$, and in recession($u_b$) is $10 \%$.
+\begin{itemize}
+\item Since the unemployment rate depends only on the aggregate state, we can write:\footnote{This is the transition to unemployment in aggregate state $z'$ from aggregate state $z$.}
+\begin{align*}
+u_{z'} & = \pi_{0|1zz'}(1-u_z) + \pi_{0|0zz'} u_z.
+\end{align*}
+KS mentions the above condition as:
+\begin{align*}
+u_{z'} & =  \frac{\pi_{zz'10}}{\pi_{zz'}}(1-u_z) + \frac{\pi_{zz'00}}{\pi_{zz'}} u_z.
+\end{align*}
+Given the unemployment rates, we can write:
+\begin{align*}
+\pi_{0|1 gg} & = (u_g - u_g\pi_{0|0gg})/(1-u_g)\\
+\pi_{0|1 bb} & = (u_b - u_b\pi_{0|0bb})/(1-u_b) \\
+\pi_{0|1 bg} & = (u_g - u_b\pi_{0|0bg})/(1-u_b)\\
+\pi_{0|1 gb} & = (u_b - u_g\pi_{0|0gb})/(1-u_g).
+\end{align*}
+From this we obtain:
+\begin{align*}
+\pi_{gg10} & = \pi_{gg}\pi_{0|1gg} \\
+\pi_{gg11} & = \pi_{gg}(1-\pi_{0|1gg}) \\
+\pi_{bb10} & = \pi_{bb}\pi_{0|1bb} \\
+\pi_{bb11} & = \pi_{bb}(1-\pi_{0|1bb})\\
+\pi_{bg10} & = \pi_{bg}\pi_{0|1bg} \\
+\pi_{bg11} & = \pi_{bg}(1-\pi_{0|1bg}) \\
+\pi_{gb10} & = \pi_{gb}\pi_{0|1gb} \\
+\pi_{gb11} & = \pi_{gb}(1-\pi_{0|1gb}).
+\end{align*}
+\end{itemize}
+\end{enumerate}
+Thus we are able to obtain all the 16 entries of the transition matrix $\Pi.$ We'll also need the four conditional transition matrices, namely, $\pi_{\epsilon'|\epsilon gg},\pi_{\epsilon'|\epsilon bg}, \pi_{\epsilon'|\epsilon gb}\pi_{\epsilon'|\epsilon bb}$, during simulation. These matrices can be calculated based on the expressions derived above. 
+
+\section{Economic Environment}
+Economy is populated by infinitely lived agents with CRRA utility. Each agent solves:
+\begin{align*}
+\max \sum_t \beta^t \frac{c_t^{1-\sigma}-1}{1-\sigma}
+\end{align*}
+subject to 
+\begin{align*}
+c_t + a_{t+1} & = w_t \tilde{l}\epsilon_t + (1+r_t)a_t\\
+a_{t+1} & \geq \underline{a}.
+\end{align*}
+Firms have Cobb-Douglas production function with aggregate shocks:
+\begin{align*}
+Y_t & = z_t K_t^{\theta}N_t^{1-\theta} \\
+r_t + \delta & = z_t \theta (\frac{K_t}{N_t})^{\theta -1} \\
+w_t & = z_t (1-\theta) (\frac{K_t}{N_t})^{\theta}.
+\end{align*} 
+The resource constraint for this economy are as follows:
+\begin{align*}
+Y_t  & = C_t + K_{t+1} -(1-\delta)K_t \\
+C_t & = \int c_t(a, \epsilon) d\mu_t(a, \epsilon)\\
+K_{t+1} & = \int a_{t+1}(a, \epsilon) d\mu_t(a, \epsilon).
+\end{align*}
+
+\subsection{Recursive Equilibrium}
+In  order to write the recursive problem we first must think about what are the relevant state variables for the individuals problem. In Aiyagari (1994), we were solving for the steady state where the prices $r, w$ were constant (since there was no aggregate uncertainty). In KS the prices are a function of the aggregate distribution of assets, hence they have to be included as a state variable. The individual state variable will be $(a, \epsilon)$, while the aggregate state variables includes $(\mu, z).$ Then the recursive version of the agents problem can be written as:
+\begin{align*}
+V(a, \epsilon; \mu, z) & = \max \{ u(c) + \beta \mathbb{E}[V(a', \epsilon'; \mu', z')] \\
+\text{subject to} \\
+c + a' & = w(\mu, z)\tilde{l}\epsilon + (1 + r(\mu, z))a \\
+\mu' & = \Psi(\mu, z, z')
+\end{align*}
+
+\subsection{Approximate aggregation}
+Note that aggregate employment $N_t$ is a function only of the aggregate state. The distribution matter only for aggregate capital($K_t$). This means that in the current setup only $K$ will influence the prices. The recursive problem then can be recast as:
+\begin{align*}
+V(a, \epsilon; z, K) & = \max \{ u(c) + \beta \mathbb{E}[V(a', \epsilon'; z', K')] \\
+\text{subject to} \\
+c + a' & = w(z, K)\tilde{l}\epsilon + (1 + r(z, K))a \\
+\log K' & = a_0 + a_1 \log K, \; \; \; \text{if} \; \; \; z = g\\
+\log K' & = b_0 + b_1 \log K, \; \; \; \text{if} \; \; \; z = b.
+\end{align*} 
+
+\subsection{Computation Algorithm}
+The foremost thing is to get the policy functions, $c(a, \epsilon, K), a'(a, \epsilon, K)$ for a given initial guess of $(a_0, a_1, b_0, b_1)$. The next step is to draw random shocks $(\epsilon, z)$ given the markov process for large $N$ and $T$, and simulate the economy. Use the time series $\{K_t, z_t\}$ to update the guess for $(a_0, a_1, b_0, b_1)$. Repeat till the convergence of the coefficients $(a_0, a_1, b_0, b_1)$. The detailed computation algorithm is outlined below.
+\begin{enumerate}
+\item \textbf{Policy Function Computation:} For a given guess of $(a_0, a_1, b_0, b_1)$, use the Euler:
+\begin{align*}
+U_c\Big(c(a, \epsilon; z, K)  \Big) & \geq \beta \mathbb{E}\Big[(1+r(z', K'))U_c\Big( c(a'(a, \epsilon; z, K), \epsilon'; z', K') \Big) \Big] \\
+(&= \; \; \text{if} \; \; \; a'(a, \epsilon; z, K) >0); \\
+c + a' & = w(z, K)\tilde{l}\epsilon + (1 + r(z, K))a \\
+\log K' & = a_0 + a_1 \log K, \; \; \; \text{if} \; \; \; z = g\\
+\log K' & = b_0 + b_1 \log K, \; \; \; \text{if} \; \; \; z = b.
+\end{align*}
+to solve for the policy function using either EGM or policy function iteration. We describe the two computation algorithm in detail below.
+\textbf{EGM}
+\begin{itemize}
+\item Guess the policy function $c^{(m)}(a, \epsilon; z, K)$ on the $(a, \epsilon, z)$ grid.
+\item Interpolate the policy function. We'll need to evaluate the policy function at $K'$ which may not be on the initial $K$ grid.
+\item We'll calculate the current consumption and asset level corresponding to given asset level tomorrow for each level of present aggregate capital $(K)$.
+\item Compute $c^*(a', \epsilon; z, K) = U_c^{-1} \mathbb{E}_{(\epsilon', z')|z} \Big[\beta(1+r(z', K'(z, K)))U_c\Big( c(a', \epsilon'; z', K'(z, K)) \Big) \Big].$
+\item Compute $a^*(a', \epsilon; z, K) =(c^*(a', \epsilon; z, K) + a' - w(z, K)\tilde{l}\epsilon )/(1 + r(z, K)).$
+\item Update the guess for the policy function as:
+\begin{align*}
+c^{(m+1)}[a, \epsilon; z, K]= 
+\begin{cases}
+(1+r(z, K))a + w(z, K)\epsilon - a_0 & ; \text{if} \; \; \;  a < a^*[a_0, \epsilon; z, K] \\
+\text{Interpolate} (c^*[a_j, \epsilon; z, K], c^*[a_{j+1}, \epsilon; z K]) &;  a^*[a_j, ..] < a_i < a^*[a_{j+1}, ..] \\
+\end{cases}
+\end{align*}
+\item Repeat till convergence.
+\end{itemize}
+
+\textbf{Policy Function Iteration}
+\begin{itemize}
+\item Start with a guess for the policy function $a'(a, \epsilon; z, K)$.
+\item For each $(z, K)$, get $K'$ using the forecast equation.
+\item Based on the inital guess get $a''(a', \epsilon', z', K')$.
+\item Use the budget equation to get $c'(a', \epsilon'; z', K').$
+\item Use the Euler to obtain $c(a, \epsilon; z, K)$, $a(a, \epsilon; z, K)$.
+\item Update the initial guess for the policy function and iterate till convergence.
+\item The Policy function iteration is outline in detail in Maliar, Maliar, and Valli (2010, JEDC).
+\end{itemize}
+\end{enumerate}
+
+\item \textbf{Simulation:} We'll use the policy function to simulate the economy for large $N$ and $T$. The details of simulation is outlined below.
+\begin{itemize}
+\item Calculate the mean of initial asset holdings $K_0 = \frac{\sum_{i \in I} a_i}{I}$. KS starts with inital distribution of assets where all agents hold the same level of wealth, and hence is also the initial $K_0$.
+\item Use the transition matrix to simulate shocks for all the agents for $T$ periods.
+\item Use the policy function to get the mean savings each period.
+\item Use the time series $\{K_t, z_t\}$ to update the coefficients $(a_0, a_1, b_0, b_1)$.
+\item Repeat until convergence.
+\end{itemize}
+
+\section{Results}
+The estimates of coefficients of aggregate law of motion of capital is:
+\begin{align*}
+\log K' & = 0.0225 + 0.995 \log K, \; \; \; \text{if} \; \; \; z = g  \; \; \; \; R^2 = 0.99996 \\
+\log K' & = 0.015 + 0.995 \log K, \; \; \; \text{if} \; \; \; z = b \; \; \; \; R^2 = 0.999998
+\end{align*}
+
+We plot the policy function for at the estimated coefficients below:
+
+\end{document}
