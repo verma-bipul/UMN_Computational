@@ -24,7 +24,7 @@ More info on how the subroutine works is commented in the respective files
 - KS_estimates.jl : Estimates the Krussel-Smith model using EGM.
 - MMV_JDEC.jl : Estimates the KS model using method suggested in MMV (JDEC , 2010).
 - check_QE : Checks the functions and estimation by matching results with one on QuantEcon.
-- 
+
 
 
 
