@@ -1,0 +1,13 @@
+# Instructions to upload file on the CLA server
+
+scp -r ./<dir>/ verma176@compute.cla.umn.edu:/pkg/um8185/verma176/
+
+# scp is for secure copy, -r is for recursive
+
+
+# to check if everything is uploaded correctly -
+
+ssh -l verma176 compute.cla.umn.edu
+cd /pkg/um8185/verma176
+ls 
+

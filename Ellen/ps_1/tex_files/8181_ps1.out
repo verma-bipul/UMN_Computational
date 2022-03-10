@@ -1,0 +1,13 @@
+\BOOKMARK [1][-]{section.1}{Model}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Parameters}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Steady State}{section.1}% 3
+\BOOKMARK [1][-]{section.2}{Value Function Iteration}{}% 4
+\BOOKMARK [2][-]{subsection.2.1}{Results from VFI}{section.2}% 5
+\BOOKMARK [1][-]{section.3}{LQ Approximation}{}% 6
+\BOOKMARK [2][-]{subsection.3.1}{\(b\) \(ii\) Return function depends on \(k, k', h\):}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.2}{\(b\) \(iii\) Return function depends on \(k, k'\):}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.3}{\(c\) Vaughan Method}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.4}{Results from LQ}{section.3}% 10
+\BOOKMARK [1][-]{section.4}{Time series of output}{}% 11
+\BOOKMARK [1][-]{section.5}{Properties of Solution }{}% 12
+\BOOKMARK [1][-]{section.6}{Alternate Utility Function}{}% 13
